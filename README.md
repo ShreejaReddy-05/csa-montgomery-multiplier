@@ -1,35 +1,69 @@
-# csa-montgomery-multiplier
-Scalable CSA-based Montgomery multiplier RTL design for RSA cryptographic applications.
+# Parameterized Montgomery Multiplier RTL
+
 ## Overview
 
-This project implements a scalable Carry-Save Adder (CSA)-based
-Montgomery multiplier in Verilog HDL for efficient modular multiplication
-in RSA cryptographic applications.
+This project implements a parameterized iterative Montgomery multiplier
+in Verilog HDL for efficient modular multiplication in cryptographic
+hardware applications.
+
+The design uses an FSM-controlled RTL architecture with a dedicated
+modular arithmetic datapath and supports configurable operand widths.
 
 ## Key Features
 
-- Parameterized RTL architecture
-- CSA-based arithmetic datapath
-- Montgomery modular multiplication
+- Parameterized operand width
+- Iterative Montgomery multiplication
+- FSM-based control logic
+- Modular arithmetic datapath
+- Conditional operand addition
+- Modular reduction
+- Iterative right-shift operations
+- Cycle-based operation control
 - Synthesizable Verilog RTL
-- Designed for large-operand modular arithmetic
 
 ## Architecture
 
-The design uses Carry-Save Addition to reduce carry propagation during
-intermediate arithmetic operations, enabling efficient modular
-multiplication.
+The design consists of three main RTL components:
 
-## RTL Implementation
+### 1. Controller FSM
 
-The design is implemented in Verilog HDL using a modular RTL architecture
-for hardware-based cryptographic acceleration.
+The controller manages the overall multiplication sequence through
+four states:
 
-## Tools
+- `IDLE` – waits for a multiplication request
+- `LOAD` – initializes the datapath and operands
+- `RUN` – enables iterative Montgomery computation
+- `DONE` – indicates completion of the operation
 
-- Verilog HDL
-- Xilinx Vivado
+### 2. Datapath
 
-## Project Status
+The datapath performs the iterative modular arithmetic operations:
 
-RTL design completed.
+- Conditional addition of operand `B`
+- Conditional addition of modulus `N`
+- Modular reduction
+- Right-shift operation
+- Iteration counting
+
+The datapath is parameterized by the operand width.
+
+### 3. Top-Level Integration
+
+The top module integrates the controller FSM and datapath and provides
+the external interface for operands, control signals, result, and
+operation completion.
+
+## RTL Structure
+
+```text
+montgomery-multiplier-rtl/
+│
+├── rtl/
+│   ├── top.v
+│   ├── datapath.v
+│   └── controller_fsm.v
+│
+├── tb/
+│   └── tb_top.v
+│
+└── README.md
